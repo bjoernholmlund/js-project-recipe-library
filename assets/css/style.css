@@ -6,21 +6,27 @@
   --button1:  rgb(204, 255, 226);
   --button2: rgb(255, 236, 234);
 
+  /* button */
   --btn-height: 48px;
   --btn-font: 18px;
-  --btn-font-weight: 150;      /* bra träffyta */
-  --btn-radius: 999px;   /* pill-form */
+  --btn-font-weight: 150;      
+  --btn-radius: 999px;   
   --btn-gap: 12px;
   --block-gap: 16px;
-  --group-width: 654px;
-  --group-height: 85px;
 
+  /*Recipe card */ 
   --recipe-width: 300px;
   --recipe-height: 621px;
   --recipe-radius: 8px;
   --recipe-shadow: rgba(0, 0, 0, 0.1);
   --recipe-shadow-hover: rgba(0, 0, 0, 0.2);
-  
+  --group-width: 1000px;
+  --group-height: 85px;
+
+    /* Layout */
+  --container-max: 1200px;
+  --page-pad: 16px;
+
  
 }
 
@@ -51,6 +57,8 @@ gap: var(--block-gap);
 width: var(--group-width);
 height: var(--group-height);
 box-sizing: border-box;
+padding-left: max(clamp(12px, 6vw, 20px), env(safe-area-inset-left));
+padding-right: max(clamp(12px, 6vw, 20px), env(safe-area-inset-right));
 /* overflow: hidden; */
 }
 
@@ -80,7 +88,7 @@ box-sizing: border-box;
   text-align: left;
 }
 
-.btn, .btn-time{
+.btn, .btn-time, .btn-random{
   font-family: 'sans-serif';
   background-color: var(--button1);
   display: inline-flex;
@@ -108,25 +116,42 @@ box-sizing: border-box;
   color: var(--h1);
 }
 
-.btn:hover, .btn-time:hover{ 
+.btn:hover, .btn-time:hover, .btn-random:hover{ 
   border-color: var(--h1); 
 }
-.btn:active, .btn-time:active{ 
+.btn:active, .btn-time:active, .btn-random:active{ 
   transform: translateY(1px); 
-  border-color: var(--h1);}
+  border-color: var(--h1);
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;   /* centrera rader i mobil */
+}
+
+  /* Fyll ut rad på mobil men behåll min-bredd */
+.button-row .btn,
+.button-row .btn-time,
+.button-row .btn-random {
+  flex: 0 1 150px;          /* väx, krymp, min 140px */
+}
 /*buttonarea och filter 1*/
 
 /*recipe and cards*/
 
 .recipe-grid, .recipe-card-placeholder{
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(7, 1fr);
 
   gap: 24px;
 }
 
 .recipe-card {
   display: block;
+  border: 2px solid transparent;
+  border-radius: var(--recipe-radius);
   height: var(--recipe-height);
   max-width: var(--recipe-width);
   gap: 24px;
@@ -137,6 +162,7 @@ box-sizing: border-box;
 }
 
 .recipe-card:hover {
+  border-color: var(--h1);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px var(--recipe-shadow-hover);
 }
@@ -146,6 +172,7 @@ box-sizing: border-box;
   height: 200px;
   object-fit: cover;
   display: block;
+  margin: 0;
 }
 
 .recipe-card h3{
@@ -154,8 +181,81 @@ box-sizing: border-box;
   font-weight: 700;
   color: #151827;
 }
+
+
 .recipe-card p{
   margin: 0 12px 12px;
   color: #6F6F6F;
-  font-size: 13px;
+  font-size: var();
+}
+
+
+@media (prefers-reduced-motion: reduce){
+  .recipe-card{ transition: border-color .18s ease; }
+  .recipe-card:hover,
+  .recipe-card:focus-visible{ transform: none; box-shadow: none; }
+}
+
+/* ≥480px: allow 1 columns */
+@media (min-width: 350px) {
+  .recipe-grid, .recipe-card-placeholder{
+    grid-template-columns: repeat(1, 1fr);
+    gap: 18px;
+  }
+}
+
+/* ≥768px: tablet layout improvements */
+@media (min-width: 768px) {
+  .group{ 
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas:
+      "head-left head-right";
+  }
+
+  .recipe-grid, .recipe-card-placeholder{
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  h1 { margin: 40px 0; }
+
+  .group {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "head-left head-right"
+      "buttons   buttons";
+    row-gap: 16px;
+  }
+}
+
+/* ≥1024px: desktop */
+@media (min-width: 1024px) {
+  .recipe-grid, .recipe-card-placeholder{
+    grid-template-columns: repeat(5, 1fr);
+    gap: 22px;
+  }
+
+  .buttonarea, .filter{
+    align-items: flex-start;
+  }
+
+  .recipe-card { margin-top: 24px; }
+
+  .button-row .btn,
+  .button-row .btn-time,
+  .button-row .btn-random {
+    flex: 0 0 auto;
+  }
+  .button-row { gap: 14px; }
+}
+
+
+/* ≥1280px: wide screens (near your original 7 cols) */
+@media (min-width: 1280px) {
+  .recipe-grid, .recipe-card-placeholder{
+    grid-template-columns: repeat(7, 1fr);
+    gap: 24px;
+  }
+
+  h1 { margin: 50px 0; }
 }
